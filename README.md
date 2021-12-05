@@ -1,4 +1,4 @@
-# acmCSUF-DiscordBot
+# ACM-CSUF-Discord-Bot
 
 # Installation
 
