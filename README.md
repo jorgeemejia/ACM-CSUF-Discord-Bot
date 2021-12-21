@@ -1,3 +1,4 @@
+![](imgs/ACMDevLogo.png)
 # ACM-CSUF-Discord-Bot
 
 # Installation
