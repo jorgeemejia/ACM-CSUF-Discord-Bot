@@ -7,11 +7,9 @@ This is the GitHub for ACM-CSUF's Discord Bot. (Mission Statement Here)
 # Features
 ## There are 2 main features we would like for this bot to have.
 
-## 1
-* On-Boarding Feature
+i. On-Boarding Feature
   * Restricts new members to view only certain channels (#announcements, #get-roles, #rules, #help, #server-wiki)  until they choose a role, once they choose a role, they’ll be able to view all of the channels that pertain to their chosen role + #General
 
-## 2
 
 # More Info About The Features
 
@@ -19,15 +17,13 @@ This is the GitHub for ACM-CSUF's Discord Bot. (Mission Statement Here)
 
 This functionality will consist of Two Events:
 
-i.On_Member_Join:
+i. On_Member_Join:
 
 * Get the role id of the “New_Members” role
   * (Users in the New_Members Role will only be able to see (#announcements, #get-roles, #rules, #help, #server-wiki)
 * Assign the member who just joined to “New_Members”
 
-
-
-ii.On_Raw_Reaction_Add:
+ii. On_Raw_Reaction_Add:
 
 * Get the message-id of “Role Message”
   * (Role Message will be the only message found in Get-Roles, Role Message will be the message new members will react to in order to get a role)
