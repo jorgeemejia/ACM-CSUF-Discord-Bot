@@ -10,8 +10,8 @@
 
 ## Pre-Req's:
 
-Have Python3 installed
-
+* Have Python3 installed
+(since we will be using Discord.py, you will need the latest version of Python aka Python3)
 
 ### Don't Have Python Installed?
 Link to downloads:
