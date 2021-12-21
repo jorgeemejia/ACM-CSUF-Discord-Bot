@@ -8,6 +8,16 @@
 Have Python3 installed
 
 
+##### Don't Have Python Installed?
+Link to downloads:
+https://www.python.org/downloads/
+
+Guide to download Python3 on Windows:
+https://phoenixnap.com/kb/how-to-install-python-3-windows
+
+Guide to download Python3 on Mac
+https://docs.python-guide.org/starting/install3/osx/
+
 #### Step 1:
 
 Open your terminal
