@@ -13,7 +13,7 @@
 * Have Python3 installed
 (since we will be using Discord.py, you will need the latest version of Python aka Python3)
 * An IDE of your choice
-(ie. Atom, Visual Studio, Visual Studio Code)
+(e.g. Atom, Visual Studio, Visual Studio Code)
 
 ### Don't Have Python Installed?
 Link to downloads:
