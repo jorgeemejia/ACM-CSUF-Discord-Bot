@@ -3,7 +3,9 @@
 
 # Features
 * On-Boarding Feature
-  * Restricts new members to view only certain channels (#announcements, #get-roles, #rules, #help, #server-wiki)  until they choose a role, once they choose a role, they’ll be able to view all of the channels that pertain to their chosen role +  #General
+  * Restricts new members to view only certain channels (#announcements, #get-roles, #rules, #help, #server-wiki)  until they choose a role, once they choose a role, they’ll be able to view all of the channels that pertain to their chosen role + #General
+
+
 # Installation
 
 #### Pre-Req's:
