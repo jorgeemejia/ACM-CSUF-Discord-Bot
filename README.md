@@ -19,15 +19,15 @@ This is the GitHub for ACM-CSUF's Discord Bot. (Mission Statement Here)
 
 This functionality will consist of Two Events:
 
-i. On_Member_Join:
+i.On_Member_Join:
 
 * Get the role id of the “New_Members” role
- * (Users in the New_Members Role will only be able to see (#announcements, #get-roles, #rules, #help, #server-wiki)
+  * (Users in the New_Members Role will only be able to see (#announcements, #get-roles, #rules, #help, #server-wiki)
 * Assign the member who just joined to “New_Members”
 
 
 
-ii. On_Raw_Reaction_Add:
+ii.On_Raw_Reaction_Add:
 
 * Get the message-id of “Role Message”
  * (Role Message will be the only message found in Get-Roles, Role Message will be the message new members will react to in order to get a role)
