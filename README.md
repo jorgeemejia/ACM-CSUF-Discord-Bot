@@ -1,7 +1,7 @@
 ![](imgs/ACMDevLogo.png)
 # ACM-CSUF-Discord-Bot
 
-#Welcome!
+# Welcome!
 This is the GitHub for ACM-CSUF's Discord Bot. (Mission Statement Here)
 
 # Features
