@@ -14,6 +14,7 @@
 (since we will be using Discord.py, you will need the latest version of Python aka Python3)
 * An IDE of your choice
 (e.g. Atom, Visual Studio, Visual Studio Code)
+* A Github Account
 
 ### Don't Have Python Installed?
 Link to downloads:
