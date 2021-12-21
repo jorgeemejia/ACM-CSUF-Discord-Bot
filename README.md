@@ -30,10 +30,10 @@ i.On_Member_Join:
 ii.On_Raw_Reaction_Add:
 
 * Get the message-id of “Role Message”
- * (Role Message will be the only message found in Get-Roles, Role Message will be the message new members will react to in order to get a role)
+  * (Role Message will be the only message found in Get-Roles, Role Message will be the message new members will react to in order to get a role)
 * If the message-id of “Role Message” is the same as the message-id of the payload, 
- * store the value of the member of the payload 
- * store the guild of that member^
+   * store the value of the member of the payload 
+   * store the guild of that member^
 * Get the id of the emoji the member used to react
 * If the id of the emoji matches the id of the Dev emoji, assign the user to the Dev role 
 * If the id of the emoji matches the id of the Create emoji, assign the user to the Create role
