@@ -11,20 +11,14 @@ client = discord.Client()
 
 @client.event
 async def on_ready():
+  """Outputs a statement to the terminal that the bot has logged on successfully"""
   print('logged in as {0.user}'.format(client))
 
+
+@client.event
+async def on_message(message):
+  """Whenever a user says 'Hi', the bot will respond with 'Hello'"""
+  if message.content == "Hi":
+    await message.channel.send("Hello")
+
 client.run(os.environ.get('TOKEN'))
-
-#Alejandro Ramos email: alejandroramosh27@csu.fullerton.edu
-
-#Sreevidya Sreekantham  email: srvidya@csu.fullerton.edu
-
-#Himani Tawade (himani.tawade@csu.fullerton.edu)
-#AkshayaK
-#AkshayaR@csu.fullerton.edu
-
-#Ricardo Granados (ricardog2002@csu.fullerton.edu)
-
-#Joel Anil John (joel.aniljohn@csu.fullerton.edu)
-
-#Mohamed Habarneh (MohamedHabarneh@csu.fullerton.edu)
