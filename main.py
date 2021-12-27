@@ -36,8 +36,5 @@ async def on_message(message):
 # There are tons of sites with tons of bots, just choose one and have them join)
 # Here is a link to a site that let's you invite bots to your server: https://top.gg/  
 
-@client.event
-async def on_member_join(member):
-  print("A member has joined!")
 
 client.run(os.environ.get('TOKEN'))
