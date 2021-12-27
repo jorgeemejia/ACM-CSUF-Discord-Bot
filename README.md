@@ -79,7 +79,7 @@ Open your terminal
 Git clone
 
 ```
-git clone https://github.com/wesleychoucsuf/acmCSUF-DiscordBot.git
+git clone https://github.com/jorgeemejia/acmCSUF-DiscordBot.git
 ```
 
 ## Step 3:
