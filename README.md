@@ -2,7 +2,7 @@
 # ACM-CSUF-Discord-Bot
 
 # Welcome!
-This is the GitHub for ACM-CSUF's Discord Bot. (Mission Statement Here)
+This is the GitHub for ACM-CSUF's Discord Bot. 
 
 # Features
 ## There are 2 main features we would like for this bot to have.
@@ -10,6 +10,18 @@ This is the GitHub for ACM-CSUF's Discord Bot. (Mission Statement Here)
 i. On-Boarding Feature
   * Restricts new members to view only certain channels (#announcements, #get-roles, #rules, #help, #server-wiki)  until they choose a role, once they choose a role, they’ll be able to view all of the channels that pertain to their chosen role + #General
 
+ii. Scheduling Feature : Matching of Classes
+  * A pinned message with a link to a Google Form asking students to fill out their schedules in the "Scheduling" text channel.
+  * This Google Form will gather the class sections they are taking. Links to a backend Database.
+  * Add members to text channels based on their classes (pulled from this database). It is like adding a role to them, and classes they are not in will not be visible to avoid visual clog of the server. 
+  * Computer Science Classes: Each class inclusive of all sections will be their own text channel. ("CS 120" has 120-1,-2,-3,-4..., "CS 121" has 121-1,-2,-3,-4...,...)
+  * Select Math Classes: Math 125, 150A, 150B, 250A, 270A, 270B, 338 will have their own text channels inclusive of all sections. 
+  * Non CS Dept Classes: Each department inclusive of all classes will be their own text channel. ("GEOL" has all sections of 101, 201, ...)
+  * Members can do a command within these channels that shows who in the text channel has the same section number as them. 
+iii. Scheduling Feature : Data Metrics
+  * Coming from the same Backend Database, the data of class times will be what is analyzed.
+  * Analysis of when members are in classes, output of times when most students (50%+) are out of class to help us schedule club events
+  * Can be filtered to output based on paths (Algo, Create, Dev)
 
 # More Info About The Features
 
