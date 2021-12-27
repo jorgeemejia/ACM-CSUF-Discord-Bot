@@ -93,12 +93,12 @@ cd acmCSUF-DiscordBot
 ## Step 4:
 
 ```
-python -m pip install -r .\requirements.txt
+python -m pip install -r ./requirements.txt
 ```
 If this isn't working, try:
 
 ```
-python3 -m pip install -r .\requirements.txt
+python3 -m pip install -r ./requirements.txt
 ```
 
 ## Step 5:
