@@ -1,6 +1,8 @@
 ![](imgs/ACMDevLogo.png)
 # ACM-CSUF-Discord-Bot
 
+THIS WAS ALL MADE BY ME 
+
 # Welcome!
 This is the GitHub for ACM-CSUF's Discord Bot. 
 
