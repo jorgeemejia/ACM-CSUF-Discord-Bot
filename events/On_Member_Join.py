@@ -19,7 +19,7 @@ async def on_ready():  #event is called using the on_ready function
 async def on_message(message):
   """Whenever a user says 'Hi', the bot will respond with 'Hello'"""
   if message.content == "Hi":
-    await message.channel.send("Hello!!")
+    await message.channel.send("Hello, Whoever you are!")
 
 
 #MEMBER_JOIN :
