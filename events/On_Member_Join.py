@@ -20,6 +20,8 @@ async def on_message(message):
   """Whenever a user says 'Hi', the bot will respond with 'Hello'"""
   if message.content == "Hi":
     await message.channel.send("Hello")
+  if message.content == "Name":
+    await message.channel.send("ACM-CSUF-Discord-Bot")
 
 
 #MEMBER_JOIN :
