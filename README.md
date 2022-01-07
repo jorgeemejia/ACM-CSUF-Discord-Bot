@@ -52,6 +52,13 @@ ii. On_Raw_Reaction_Add:
 
 # Installation
 
+## Quick Start (Docker)
+1. Open up `.env-example` and fill in your `GUILD` and `TOKEN`
+2. Rename `.env-example` to `.env`
+3. Build the image with `docker build -t acmdiscordbot:latest .`
+4. Run the image, supplying the image with the `.env` file from earlier 
+   `docker run --env-file .env acmdiscordbot`
+
 ## Pre-Req's:
 
 * Have Python3 installed
