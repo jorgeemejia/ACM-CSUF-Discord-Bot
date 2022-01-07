@@ -3,13 +3,12 @@ from discord.ext.commands import Bot, Cog
 from discord_slash import cog_ext, SlashContext
 from os import environ
 
-
 def getGuilds():
-    guild = environ.get('GUILD')
-    if guild is not None:
-        return [int(guild)]
-    else:
-        return []
+    guildList = environ.get('GUILD')
+    guilds = []
+    if guildList is not None:
+        guilds.append(int(guildList.split(',')))
+    return guilds
 
 class Schedules(Cog):
     def __init__(self, bot: Bot):
@@ -22,3 +21,4 @@ class Schedules(Cog):
 
 def setup(bot: Bot):
     bot.add_cog(Schedules(bot))
+
