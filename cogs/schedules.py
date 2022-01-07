@@ -14,6 +14,7 @@ def getGuilds():
 class Schedules(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
+        hello
 
     @cog_ext.cog_slash(name="test", guild_ids=getGuilds())
     async def _test(self, ctx: SlashContext):
