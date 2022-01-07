@@ -110,3 +110,9 @@ To run the bot,
 ```
 python main.py
 ```
+
+or if this doesn't work try:
+
+```
+python3 main.py
+```
