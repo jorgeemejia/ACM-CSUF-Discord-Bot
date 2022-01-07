@@ -7,7 +7,8 @@ def getGuilds():
     guildList = environ.get('GUILD')
     guilds = []
     if guildList is not None:
-        guilds.append(int(guildList.split(',')))
+        for guild in guildList.split(','):
+            guilds.append(int(guild))
     return guilds
 
 class Schedules(Cog):
@@ -17,7 +18,7 @@ class Schedules(Cog):
     @cog_ext.cog_slash(name="test", guild_ids=getGuilds())
     async def _test(self, ctx: SlashContext):
         embed = Embed(title="Embed Test")
-        await ctx.send(embed=embed)
+        await ctx.send(content="", embed=embed)
 
 def setup(bot: Bot):
     bot.add_cog(Schedules(bot))
