@@ -11,6 +11,19 @@ class Schedules(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
+    def fetchGoogleFormResults():
+        # Fetch the google form results every 15s
+        # process the new results, and pass them to the confirmUser function 
+        pass
+
+    def confirmUser(user, classes):
+        # Find the user by discord tag
+        # DM them the classes, check that this is the correct user, and the correct classes
+        # Display the message using discord's embedded messages
+        # Have a user click a button to confirm everything is correct
+        pass
+
+
     @cog_ext.cog_slash(name="test", guild_ids=guild_ids)
     async def _test(self, ctx: SlashContext):
         await ctx.send(content="test")
