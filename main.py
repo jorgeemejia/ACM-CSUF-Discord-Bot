@@ -6,11 +6,11 @@ load_dotenv()
 from discord.ext import commands
 from discord_slash import SlashCommand, SlashContext
 
-bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
+bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'), intents=discord.Intents.all())
+slash = SlashCommand(bot, sync_commands=True)
 bot.load_extension("cogs.schedules")
 bot.load_extension("cogs.roles")
 
-slash = SlashCommand(bot, sync_commands=True)
 
 @bot.event  #creates a bot event
 async def on_ready():  #event is called using the on_ready function
