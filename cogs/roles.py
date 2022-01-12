@@ -58,6 +58,7 @@ class Roles(Cog):
     @Cog.listener()
     async def on_raw_reaction_add(self, payload):
         # YOUR CODE GOES HERE
+        pass
     
 
 

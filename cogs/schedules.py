@@ -31,6 +31,11 @@ class Schedules(Cog):
     @cog_ext.cog_slash(name="test2", description="This command has a description", guild_ids=guild_ids)
     async def _test2(self, ctx: SlashContext):
         await ctx.send(content="test2")
+
+    @cog_ext.cog_slash(name="schedule", description="This command has a description", guild_ids=guild_ids)
+    async def schedule(self, ctx: SlashContext):
+        await ctx.send(content="https://docs.google.com/forms/d/1sz-YZ3QkpTkVMFYlX8Mt0k1jhJrSY1BPzXMMUVdCEXs/edit")
+
     
     """
     Create your own command that allows a user to run /schedule, and it will return a link to the google form ("https://docs.google.com/forms/d/1sz-YZ3QkpTkVMFYlX8Mt0k1jhJrSY1BPzXMMUVdCEXs/edit")
@@ -40,4 +45,3 @@ class Schedules(Cog):
 
 def setup(bot: Bot):
     bot.add_cog(Schedules(bot))
-
