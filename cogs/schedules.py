@@ -1,8 +1,11 @@
 from discord import Embed
 from discord.ext.commands import Bot, Cog
 from discord_slash import cog_ext, SlashContext
-from os import environ
-guild_ids = [914688600828960788]
+from sys import path
+path.append('../')
+from helpers import getGuilds
+
+guild_ids = getGuilds()
 
 class Schedules(Cog):
     def __init__(self, bot: Bot):

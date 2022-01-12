@@ -1,3 +1,5 @@
+from os import environ
+
 def getGuilds():
     guildList = environ.get('GUILD')
     guilds = []
