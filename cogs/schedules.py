@@ -4,14 +4,6 @@ from discord_slash import cog_ext, SlashContext
 from os import environ
 guild_ids = [914688600828960788]
 
-def getGuilds():
-    guildList = environ.get('GUILD')
-    guilds = []
-    if guildList is not None:
-        for guild in guildList.split(','):
-            guilds.append(int(guild))
-    return guilds
-
 class Schedules(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
