@@ -1,41 +1,76 @@
 from discord import Embed
 from discord.ext.commands import Bot, Cog
 from discord_slash import cog_ext, SlashContext
-from sys import path
-path.append('../')
+from os import path
+import json
 from helpers import getGuilds
 
 guild_ids = getGuilds()
+
+classes_path = path.relpath("data/classes.json")
+students_path = path.relpath("data/students.json")
+
+# Example of reading from a json file
+
+with open(classes_path, 'r') as openfile:
+    json_object = json.load(openfile)
+    print(json_object)
+
+
+# Example of writing to a json file 
+
+class_test_dict = {
+        "CPSC 131-05": ["Aaron"],
+        "MATH 338-01": ["Bob", "Kevin"]
+}
+
+class_json = json.dumps(class_test_dict)
+
+with open(classes_path, "w") as outfile:
+    outfile.write(class_json)
+
+with open(classes_path) as f:
+  classes = json.load(f)
+
+with open(students_path) as f:
+  students = json.load(f)
 
 class Schedules(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
-    def fetchGoogleFormResults():
-        # Fetch the google form results every 15s
-        # process the new results, and pass them to the confirmUser function 
-        pass
+    @cog_ext.cog_subcommand(base="schedule", name="view", description="View your schedule", guild_ids=guild_ids)
+    async def _schedule_view(self, ctx: SlashContext):
+        await ctx.send(content="schedule")
 
-    def confirmUser(user, classes):
-        # Find the user by discord tag
-        # DM them the classes, check that this is the correct user, and the correct classes
-        # Display the message using discord's embedded messages
-        # Have a user click a button to confirm everything is correct
-        pass
+    @cog_ext.cog_subcommand(base="schedule", name="add", description="Add a class to your schedule", guild_ids=guild_ids)
+    async def _schedule_add(self, ctx: SlashContext, text: str):
+        await ctx.send(content="schedule add")
 
+    @cog_ext.cog_subcommand(base="schedule", name="remove", description="Remove a class from your schedule", guild_ids=guild_ids)
+    async def _schedule_remove(self, ctx: SlashContext, text: str):
+        await ctx.send(content="schedule remove")
 
-    @cog_ext.cog_slash(name="test", guild_ids=guild_ids)
-    async def _test(self, ctx: SlashContext):
-        await ctx.send(content="test")
+    # two json files, classes.json, students.json
 
-    @cog_ext.cog_slash(name="test2", description="This command has a description", guild_ids=guild_ids)
-    async def _test2(self, ctx: SlashContext):
-        await ctx.send(content="test2")
+    # /schedule 
+        # open the students.json file
+        # return the students classes
+        # display button asking to share to the channel
 
-    @cog_ext.cog_slash(name="schedule", description="This command has a description", guild_ids=guild_ids)
-    async def schedule(self, ctx: SlashContext):
-        await ctx.send(content="https://docs.google.com/forms/d/1sz-YZ3QkpTkVMFYlX8Mt0k1jhJrSY1BPzXMMUVdCEXs/edit")
-
+    # /schedule add
+        # open both json files
+        # validate the input
+        # add the class to the person
+        # add the person to the class
+        # give them the role/permissions
+        
+    # /schedule remove
+        # open both json files
+        # check if the student is in that class
+        # remove the class from the student
+        # remove the student from the class
+        # update their roles/permissions
     
     """
     Create your own command that allows a user to run /schedule, and it will return a link to the google form ("https://docs.google.com/forms/d/1sz-YZ3QkpTkVMFYlX8Mt0k1jhJrSY1BPzXMMUVdCEXs/edit")
