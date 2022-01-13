@@ -1,29 +1,55 @@
 from discord import Embed
 from discord.ext.commands import Bot, Cog
 from discord_slash import cog_ext, SlashContext
-from sys import path
-path.append('../')
+from os import path
+import json
 from helpers import getGuilds
 
 guild_ids = getGuilds()
+
+classes_path = path.relpath("data/classes.json")
+students_path = path.relpath("data/students.json")
+
+# Example of reading from a json file
+
+with open(classes_path, 'r') as openfile:
+    json_object = json.load(openfile)
+    print(json_object)
+
+
+# Example of writing to a json file 
+
+class_test_dict = {
+        "CPSC 131-05": ["Aaron"],
+        "MATH 338-01": ["Bob", "Kevin"]
+}
+
+class_json = json.dumps(class_test_dict)
+
+with open(classes_path, "w") as outfile:
+    outfile.write(class_json)
+
+with open(classes_path) as f:
+  classes = json.load(f)
+
+with open(students_path) as f:
+  students = json.load(f)
 
 class Schedules(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
+    @cog_ext.cog_subcommand(base="schedule", name="view", description="View your schedule", guild_ids=guild_ids)
+    async def _schedule_view(self, ctx: SlashContext):
+        await ctx.send(content="schedule")
 
-    @cog_ext.cog_slash(name="test", guild_ids=guild_ids)
-    async def _test(self, ctx: SlashContext):
-        await ctx.send(content="test")
+    @cog_ext.cog_subcommand(base="schedule", name="add", description="Add a class to your schedule", guild_ids=guild_ids)
+    async def _schedule_add(self, ctx: SlashContext, text: str):
+        await ctx.send(content="schedule add")
 
-    @cog_ext.cog_slash(name="test2", description="This command has a description", guild_ids=guild_ids)
-    async def _test2(self, ctx: SlashContext):
-        await ctx.send(content="test2")
-
-    # for aaron to do:
-        # code for subcommands
-        # code for json example
-        # embed help
+    @cog_ext.cog_subcommand(base="schedule", name="remove", description="Remove a class from your schedule", guild_ids=guild_ids)
+    async def _schedule_remove(self, ctx: SlashContext, text: str):
+        await ctx.send(content="schedule remove")
 
     # two json files, classes.json, students.json
 
