@@ -11,31 +11,6 @@ guild_ids = getGuilds()
 classes_path = path.relpath("data/classes.json")
 students_path = path.relpath("data/students.json")
 
-# Example of reading from a json file
-
-with open(classes_path, 'r') as openfile:
-    json_object = json.load(openfile)
-    print(json_object)
-
-
-# Example of writing to a json file 
-
-class_test_dict = {
-        "CPSC 131-05": ["Aaron"],
-        "MATH 338-01": ["Bob", "Kevin"]
-}
-
-class_json = json.dumps(class_test_dict)
-
-with open(classes_path, "w") as outfile:
-    outfile.write(class_json)
-
-with open(classes_path) as f:
-  classes = json.load(f)
-
-with open(students_path) as f:
-  students = json.load(f)
-
 class Schedules(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
