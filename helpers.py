@@ -7,3 +7,9 @@ def getGuilds():
         for guild in guildList.split(','):
             guilds.append(int(guild))
     return guilds
+
+
+import re
+
+def isCsufEmail(email):
+    return bool(re.search(r".*@(.+\.)?fullerton.edu$", email))
