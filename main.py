@@ -10,6 +10,7 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'), intents=disco
 slash = SlashCommand(bot, sync_commands=True)
 bot.load_extension("cogs.schedules")
 bot.load_extension("cogs.roles")
+bot.load_extension("cogs.registration")
 
 
 @bot.event  #creates a bot event
