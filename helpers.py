@@ -13,3 +13,4 @@ import re
 
 def isCsufEmail(email):
     return bool(re.search(r".*@(.+\.)?fullerton.edu$", email))
+
