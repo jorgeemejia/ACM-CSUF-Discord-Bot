@@ -56,8 +56,7 @@ ii. On_Raw_Reaction_Add:
 1. Open up `.env-example` and fill in your `GUILD` and `TOKEN`
 2. Rename `.env-example` to `.env`
 3. Build the image with `docker build -t acmdiscordbot:latest .`
-4. Run the image, supplying the image with the `.env` file from earlier 
-   `docker run --env-file .env acmdiscordbot`
+4. Run the image `docker run acmdiscordbot`
 
 ## Pre-Req's:
 
