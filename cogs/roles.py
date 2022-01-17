@@ -1,23 +1,14 @@
 from discord.ext.commands import Bot, Cog
-from os import environ
+import os
+import discord
+from discord.ext.commands.converter import TextChannelConverter
+from dotenv import load_dotenv
+load_dotenv()
+
 
 class Roles(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
-
-#MEMBER_JOIN :
-
-#The first step of creating the 'member_join' functionality is figuring out a way to see when someone joins the discord server.
-#So that's what we'll be figuring out first.
-
-#TO DO:
-# Looking at the structure of the client events above, create another client event that is called when a member joins the discord server
-# HINT: ctrl+f "on_member_join" in the discord.py API Reference https://discordpy.readthedocs.io/en/stable/api.html
-
-# Make it so whenever someone joins the discord server, a statement is outputted in the terminal.
-# (You can simulate someone joining your server by inviting another bot to your server.
-# There are tons of sites with tons of bots, just choose one and have them join)
-# Here is a link to a site that let's you invite bots to your server: https://top.gg/
 
     @Cog.listener()
     async def on_member_join(self, member):
@@ -30,23 +21,68 @@ class Roles(Cog):
         if message.content == "Hi":
             await message.channel.send("Hello")
 
-# Now that we have a basic understanding of client events, let's go a little further.
-# As of now, when a member joins, a message is outputted into the terminal. Our goal now,
-# is to assign a member to a role once they join. We want to assign the new member to a role where they
-# have very few permissions. 
+    @Cog.listener()
+    async def on_member_join(self, member):
+        # NEWCOMER is the id of the NewComer role in my server
+        role = discord.utils.get(
+            member.guild.roles, id=int(os.environ.get('NEWCOMER')))
+        await member.add_roles(role)
 
-# TO DO:
-# - Create a role in your discord server
-# - Alter the body of your 'on_member_join' client event to meet our goal
+        # What happened to the previous code??
+        # A: We decided to use 'Cogs'. Essentially, cogs allow you to organize your code with classes.
+        #    You will notice we now have a 'Roles.py' file that handles all the events in our 'Roles' class
+        #    And, we also have a 'Schedules.py' file that handles all the events/commands in our 'Schedules' class
+        #    Although you might see slight changes, don't worry. The same logic we've learned still applies!
 
-# Hints/Help:
-# - If you aren't familiar with creating roles on Discord -> https://support.discord.com/hc/en-us/articles/206029707-Setting-Up-Permissions-FAQ
-# - CTRL+F "discord.utils.get" on the Discord.py API Reference, you'll use this function to store your desired role into a variable
-# - CTRL+F "add_roles" on the Discord.py API Reference, you'll use this function to add a member to your desired role
-# - "discord.utils.get" might seem tricky to understand at first but there are a few examples of how to use it in the 
-# documentation
+        # TO DO:
+        # - Send a message in your #Get-Roles text channel
+        # - Using 'on_raw_reaction_add' make another listener event that gives a member role depending on their
+        #   reaction to the message you sent in the #Get-Roles channel
+        # (For example, if the user reacts to the message with the :acmDev: emoji, then that user
+        # will be added to the 'Dev Member' Role.)
+        # - There are three roles they can choose to join, 'Dev Member', 'Algo Member', and 'Create Member'.
 
-#Good Luck :)
+        # Steps to do this:
+        # 1) Store each role into a variable using 'discord.utils.get'
+        # 2)Store the id of the designated #Get-Roles message into a variable
+        # 3)Check if the payload message id matches the designated #Get-Roles message id
+        # 4)If they do match, use if statements to handle each of the three possible reactions
+        #   (Ex.If the emoji id equal's that of the :acmDev: emoji, give them the 'Dev Member' Role)
+        # 5)Use the 'add_roles' function to add the member to a role
+
+        # TIPS/HINTS
+        # - In order to get the id of a emoji, type/enter into a text channel "\[emoji_name_goes_here"
+        # - For example, if the emoji's name was 'happy' you would type/enter into a text channel
+        #   '\happy'
+        # - 'on_raw_reaction_add' has a payload parameter make sure to look into it
+        # - All of the functions I mentioned are explained in the Discord.py API Reference
+
+    @Cog.listener()
+    async def on_raw_reaction_add(self, payload):
+
+        member = payload.member
+
+        dev_role = discord.utils.get(
+            member.guild.roles, id=int(os.environ.get('DEV')))
+        algo_role = discord.utils.get(
+            member.guild.roles, id=int(os.environ.get('ALGO')))
+        create_role = discord.utils.get(
+            member.guild.roles, id=int(os.environ.get('CREATE')))
+
+        emoji_id = payload.emoji.id
+        role_message_id = 931018904866799616  # using a random message ID to test
+
+        if payload.message_id == role_message_id:
+            # token is for the dev emoji ID
+            if emoji_id == int(os.environ.get('DEVEMOJI')):
+                await member.add_roles(dev_role)
+            # token is for the algo emoji ID
+            elif emoji_id == int(os.environ.get('ALGOEMOJI')):
+                await member.add_roles(algo_role)
+            # token is for the create emoji ID
+            elif emoji_id == int(os.environ.get('CREATEEMOJI')):
+                await member.add_roles(create_role)
+
 
 def setup(bot: Bot):
     bot.add_cog(Roles(bot))
