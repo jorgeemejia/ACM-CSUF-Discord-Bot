@@ -6,6 +6,9 @@ __pycache__/
 # Useless mac file
 .DS_Store
 
+credentials.json
+token.json
+
 # C extensions
 *.so
 
