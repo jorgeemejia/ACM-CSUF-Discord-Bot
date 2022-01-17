@@ -50,6 +50,7 @@ class Roles(Cog):
                 await member.add_roles(create_role)
     
     # TO DO:
+    # - Add all the previously mentioned .env variables ('NEWCOMER','DEV','DEVEMOJI', etc.)
     # - Create an event using 'on_raw_reaction_remove'
     # - Make the event so that when a user removes their reaction from the #Get-Roles message,
     #   that relateD role is removed
