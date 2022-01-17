@@ -120,3 +120,7 @@ or if this doesn't work try:
 ```
 python3 main.py
 ```
+
+## Discord Server Side Steps
+
+Create the "Verified Role", for when users register their CSUF email
