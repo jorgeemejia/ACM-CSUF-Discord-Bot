@@ -129,7 +129,7 @@ class Schedules(Cog):
         if result == False: return
         
         # create the email message
-        message = MIMEText("Your verification code is {}. Use /verify in discord server to complete your registration.".format(code))
+        message = MIMEText("Verification code: <h1>{}</h1> Use <code>/verify</code> in discord server to complete your registration.<br> If you did not authorize this email, please ignore.".format(code), 'html', 'UTF-8')
         message['to'] = csuf_email
         message['from'] = environ.get('SENDER_EMAIL')
         message['subject'] = "acmCSUF discord verification"
