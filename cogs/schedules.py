@@ -13,15 +13,16 @@ guild_ids = getGuilds()
 classes_path = path.relpath("data/classes.json")
 students_path = path.relpath("data/students.json")
 
+
 import mysql.connector
-mysql_options = {
+mysqlOptions = {
         'user': environ.get('DB_USER'),
         'password': environ.get('DB_PASS'),
         'host': environ.get('DB_HOST'),
         'database': environ.get('DB_NAME'),
         'autocommit': True
         }
-db = mysql.connector.connect(**mysql_options)
+db = mysql.connector.connect(**mysqlOptions)
 cursor = db.cursor()
 
 def getEnrollmentSemester():
