@@ -14,3 +14,16 @@ import re
 def isCsufEmail(email):
     return bool(re.search(r".*@(.+\.)?fullerton.edu$", email))
 
+from discord import Embed
+from datetime import datetime
+
+async def sendError(ctx, message):
+    embed=Embed(title="ERROR", description=message, color=0xff0000)
+    embed.add_field(name="Help", value="If needed, use <#{}> to get assistance".format(environ.get('HELP_CHANNEL_ID')), inline=False)
+    embed.set_footer(text=str(datetime.now()))
+    await ctx.send(embed=embed)
+
+async def sendMessage(ctx, message):
+    embed=Embed(description=message, color=0x00ff00)
+    await ctx.send(embed=embed)
+
