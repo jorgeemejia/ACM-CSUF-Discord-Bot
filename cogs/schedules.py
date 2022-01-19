@@ -4,7 +4,7 @@ from discord_slash import cog_ext, SlashContext
 from os import path
 from os import environ
 import json
-from helpers import getGuilds, sendError, sendMessage
+from helpers import getGuilds, sendError, sendMessage, standardTime
 import discord
 from datetime import datetime
 import re
@@ -57,7 +57,7 @@ class Schedules(Cog):
 
     """
 
-    /Schedule view
+    /schedule view
 
     """
 
@@ -85,7 +85,7 @@ class Schedules(Cog):
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
 
         for c in result:
-            embed.add_field(name='{} {}-{}'.format(c[0], c[1], c[2]), value='{} - {}'.format(c[3], c[4]), inline=False)
+            embed.add_field(name='{} {}-{}'.format(c[0], c[1], c[2]), value='{} - {}'.format(standardTime(c[3]), standardTime(c[4])), inline=False)
         await ctx.send(embed=embed)
 
     """
@@ -144,7 +144,8 @@ class Schedules(Cog):
         result = await query(q, d, ctx)
         if result is None: return
 
-        if (result[0][0] > 0): return
+        if (result[0][0] <= 1):
+
 
 
     """
