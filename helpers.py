@@ -26,3 +26,13 @@ async def sendError(ctx, message, hidden=False):
 async def sendMessage(ctx, message, hidden=False):
     embed=Embed(description=message, color=0x00ff00)
     await ctx.send(embed=embed, hidden=hidden)
+
+def standardTime(time):
+    m = "am"
+    components = time.split(':')
+    hours = int(components[0])
+    minutes = int(components[1])
+    if (hours >= 12) m = "pm"
+    if (hours >= 13) hours -= 12
+    return "{}:{}{}".format(hours, minutes, m)
+
