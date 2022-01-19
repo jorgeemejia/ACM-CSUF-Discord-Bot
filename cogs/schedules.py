@@ -54,6 +54,13 @@ class Schedules(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
+
+    """
+
+    /Schedule view
+
+    """
+
     @cog_ext.cog_subcommand(base="schedule", name="view", description="View your schedule", guild_ids=guild_ids)
     async def _schedule_view(self, ctx: SlashContext, semester: str = getEnrollmentSemester()):
 
@@ -72,13 +79,20 @@ class Schedules(Cog):
         if not result:
             await sendMessage(ctx, "Your {} schedule is empty, use the `/schedule add` command to add your classes!".format(semester))
             return
-
+        
+        # create embeded message
         embed=discord.Embed(title="Hello " + ctx.author.display_name + "!", description="Here are your classes:", color=0xFF5733)
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
 
         for c in result:
             embed.add_field(name='{} {}-{}'.format(c[0], c[1], c[2]), value='{} - {}'.format(c[3], c[4]), inline=False)
         await ctx.send(embed=embed)
+
+    """
+
+    /schedule add
+
+    """
 
     @cog_ext.cog_subcommand(base="schedule", name="add", description="Add a class to your schedule. Must include the section!", guild_ids=guild_ids)
     async def _schedule_add(self, ctx: SlashContext, course: str, semester: str = getEnrollmentSemester()):
@@ -124,6 +138,20 @@ class Schedules(Cog):
 
         await sendMessage(ctx, "Successfully added".format(course))
 
+        # Check if a student is the first one to join a course
+        q = 'SELECT COUNT(*) FROM DISCORDSCHEDULE WHERE classId = %s'
+        d = (classId,)
+        result = await query(q, d, ctx)
+        if result is None: return
+
+        if (result[0][0] > 0): return
+
+
+    """
+
+    /schedule remove
+
+    """
 
     @cog_ext.cog_subcommand(base="schedule", name="remove", description="Remove a class from your schedule. Must include the section!", guild_ids=guild_ids)
     async def _schedule_remove(self, ctx: SlashContext, course: str, semester: str = getEnrollmentSemester()):
