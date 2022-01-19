@@ -145,6 +145,7 @@ class Schedules(Cog):
         if result is None: return
 
         if (result[0][0] <= 1):
+            pass
 
 
 
