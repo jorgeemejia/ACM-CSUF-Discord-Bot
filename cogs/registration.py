@@ -19,19 +19,6 @@ from googleapiclient.errors import HttpError
 import logging
 logging.basicConfig(filename='logs/registration.log',format='[%(levelname)s] %(asctime)s %(message)s', level=logging.DEBUG)
 
-guild_ids = getGuilds()
-
-import mysql.connector
-mysqlOptions = {
-        'user': environ.get('DB_USER'),
-        'password': environ.get('DB_PASS'),
-        'host': environ.get('DB_HOST'),
-        'database': environ.get('DB_NAME'),
-        'autocommit': True
-        }
-db = mysql.connector.connect(**mysqlOptions)
-cursor = db.cursor()
-
 async def query(q, d, ctx=None):
     try:
         logging.info(q)
@@ -46,6 +33,18 @@ async def query(q, d, ctx=None):
             await sendError(ctx, str(e))
         return False
 
+guild_ids = getGuilds()
+
+import mysql.connector
+mysqlOptions = {
+        'user': environ.get('DB_USER'),
+        'password': environ.get('DB_PASS'),
+        'host': environ.get('DB_HOST'),
+        'database': environ.get('DB_NAME'),
+        'autocommit': True
+        }
+db = mysql.connector.connect(**mysqlOptions)
+cursor = db.cursor()
 
 def authenticate_gmail():
     # The file token.json stores the user's access and refresh tokens, and is
@@ -129,7 +128,7 @@ class Schedules(Cog):
         if result == False: return
         
         # create the email message
-        message = MIMEText("Verification code: <h1>{}</h1> Use <code>/verify</code> in discord server to complete your registration.<br> If you did not authorize this email, please ignore.".format(code), 'html', 'UTF-8')
+        message = MIMEText("Verification code: <h1>{}</h1> Use <code>/verify</code> in the discord server to complete your registration.<br> If you did not authorize this email, please ignore.".format(code), 'html', 'UTF-8')
         message['to'] = csuf_email
         message['from'] = environ.get('SENDER_EMAIL')
         message['subject'] = "acmCSUF discord verification"
@@ -143,7 +142,7 @@ class Schedules(Cog):
             await sendError(ctx, "Unable to send verification email")
 
 
-        await sendMessage(ctx, "A verification code has been sent to your email. Please run the /verify command with the code provided. (Pssst... its {})".format(code))
+        await sendMessage(ctx, "A verification code has been sent to your email. Please run the /verify command with the code provided.")
 
 
     """
