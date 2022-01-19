@@ -4,15 +4,28 @@ from discord_slash import cog_ext, SlashContext
 from os import path
 from os import environ
 import json
-from helpers import getGuilds
+from helpers import getGuilds, sendError, sendMessage
 import discord
 from datetime import datetime
 
 guild_ids = getGuilds()
 
-classes_path = path.relpath("data/classes.json")
-students_path = path.relpath("data/students.json")
+import logging
+logging.basicConfig(filename='logs/schedules.log',format='[%(levelname)s] %(asctime)s %(message)s', level=logging.DEBUG)
 
+async def query(q, d, ctx=None):
+    try:
+        logging.info(q)
+        cursor.execute(q, d)
+        result = cursor.fetchall()
+        logging.info(str(result))
+        return result
+    except Exception as e:
+        print(str(e))
+        logging.error(str(e))
+        if (ctx):
+            await sendError(ctx, str(e))
+        return None
 
 import mysql.connector
 mysqlOptions = {
@@ -35,46 +48,60 @@ def getYearFromSemester(semester):
         return now.year + 1
     else: 
         return now.year
-
+"""
 def addClass(discordId, subject, number, section, semester):
-    try:
-        cursor.execute('SELECT id from `CLASS` WHERE discordId = %s AND subject = %s AND number = %s AND section = %s AND `year` = year(curdate()) AND semester = %s;', (discordId, subject, number, section, getEnrollmentSemester()))
-        classId = cursor.fetchone()[0]
-        cursor.execute('INSERT INTO DISCORDSCHEDULE (discordId, classId) VALUES (%s, %s)', (discordId, classId))
-    except Exception as e:
-        raise
+    # Find the classId
+    q = 'SELECT id from `CLASS` WHERE discordId = %s AND subject = %s AND number = %s AND section = %s AND `year` = year(curdate()) AND semester = %s;'
+    d = (discordId, subject, number, section, getEnrollmentSemester())
+    result = await query(q, d, ctx)
+    if result is None: return
+    classId = result[0][0]
+
+    # Add the class to the student's schedule
+    q = 'INSERT INTO DISCORDSCHEDULE (discordId, classId) VALUES (%s, %s)'
+    d = (discordId, classId)
+    result = await query(q, d, ctx)
+    if result is None: return
 
 def removeClass(discordId, subject, number, section, semester):
-    try:
-        cursor.execute('SELECT id from `CLASS` WHERE discordId = %s AND subject = %s AND number = %s AND section = %s AND `year` = year(curdate()) AND semester = %s;', (discordId, subject, number, section, getEnrollmentSemester()))
-        classId = cursor.fetchone()[0]
-        cursor.execute('DELETE FROM DISCORDSCHEDULE WHERE classId = %s AND discordId = %s', (classId, discordId))
-    except Exception as e:
-        raise
+    # find the classId
+    q = 'SELECT id from `CLASS` WHERE discordId = %s AND subject = %s AND number = %s AND section = %s AND `year` = year(curdate()) AND semester = %s;'
+    d = (discordId, subject, number, section, getEnrollmentSemester())
+    result = await query(q, d, ctx)
+    if result is None: return
+    classId = result[0][0]
 
-def getClasses(discordId, semester):
-    try:
-        cursor.execute('SELECT * FROM DISCORDSCHEDULE WHERE discordId = %s AND `year` = %s AND semester = %s;', (discordId, getYearFromSemester(semester), semester))
-    except Exception as e:
-        raise
-    results = cursor.fetchall()
-    return results
+    # delete the class from the student's schedule
+    q = 'DELETE FROM DISCORDSCHEDULE WHERE classId = %s AND discordId = %s'
+    d = (classId, discordId)
+    result = await query(q, d, ctx)
+    if result is None: return
+"""
 
 class Schedules(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
     @cog_ext.cog_subcommand(base="schedule", name="view", description="View your schedule", guild_ids=guild_ids)
-    async def _schedule_view(self, ctx: SlashContext):
-        embed=discord.Embed(title="Hello " + ctx.author.display_name + "!", 
-    description="Here are your classes:", 
-    color=0xFF5733)
+    async def _schedule_view(self, ctx: SlashContext, semester: str = getEnrollmentSemester()):
+
+        # Get all of the students classes for the semester 
+        q = 'SELECT subject, number, section, startTime, endTime FROM CLASS INNER JOIN DISCORDSCHEDULE ON (DISCORDSCHEDULE.classId = CLASS.id) WHERE discordId = %s AND year = %s AND semester = %s;'
+        d = (ctx.author.id, getYearFromSemester(semester), semester)
+        result = await query(q, d, ctx)
+        print(result)
+        if result is None: return
+
+        # if there are no classes
+        if not result:
+            await sendMessage(ctx, "Your {} schedule is empty, use the `/schedule add` command to add your classes!".format(semester))
+            return
+
+        embed=discord.Embed(title="Hello " + ctx.author.display_name + "!", description="Here are your classes:", color=0xFF5733)
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
-        classes = students[ctx.author.display_name]
-        for class_name in classes:
-            idx = class_name.index("-")
-            class_session = class_name[idx+1:]
-            embed.add_field(name=class_name[:idx], value="Session: " + class_session, inline=False)
+
+        for c in result:
+            embed.add_field(name='{} {}-{}'.format(c[0], c[1], c[2]), value='{} - {}'.format(c[3], c[4]), inline=False)
         await ctx.send(embed=embed)
 
     @cog_ext.cog_subcommand(base="schedule", name="add", description="Add a class to your schedule", guild_ids=guild_ids)
