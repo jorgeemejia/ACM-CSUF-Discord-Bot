@@ -30,16 +30,17 @@ async def sendMessage(ctx, message, hidden=False, pinned=False, channel=None):
     if (pinned and not hidden):
         await message.pin()
 
-
 def standardTime(time):
+    if time.days > 0:
+        return "12:00am"
+    time = str(time)
     m = "am"
     components = time.split(':')
     hours = int(components[0])
-    minutes = int(components[1])
+    minutes = str(components[1])
     if (hours >= 12): m = "pm"
     if (hours >= 13): hours -= 12
     return "{}:{}{}".format(hours, minutes, m)
-
 
 from discord_slash.utils.manage_commands import create_permission
 from discord_slash.model import SlashCommandPermissionType

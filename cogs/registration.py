@@ -193,7 +193,7 @@ class Schedules(Cog):
 
         roles_channel = environ.get('ROLES_CHANNEL_ID')
 
-        await sendMessage(ctx, f"Successfully verified your email! Last step, go to <#{roles_channel} and select a role to complete your registration.")
+        await sendMessage(ctx, f"Successfully verified your email! Last step, go to <#{roles_channel}> and select a role to complete your registration.")
 
 
 def setup(bot: Bot):

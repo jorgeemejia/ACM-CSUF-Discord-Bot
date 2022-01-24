@@ -87,8 +87,9 @@ class Schedules(Cog):
         embed=discord.Embed(title="Hello " + ctx.author.display_name + "!", description="Here are your classes:", color=0xFF5733)
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
 
+        # add fields and format times to embeded message
         for c in result:
-            embed.add_field(name='{} {}-{}'.format(c[0], c[1], c[2]), value='{} - {}'.format(standardTime(str(c[3])), standardTime(str(c[4]))), inline=False)
+            embed.add_field(name='{} {}-{}'.format(c[0], c[1], c[2]), value='{} - {}'.format(standardTime(c[3]), standardTime(c[4])), inline=False)
         await ctx.send(embed=embed)
 
     """

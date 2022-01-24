@@ -1,18 +1,16 @@
 const formatTime = (str) => {
-	if (str == "TBA") return '00:00:00'
-    let hours = 0
-    if (str.includes("pm")) hours = 12
-    str = str.substr(0, 4)
-    times = str.split(":")
-    times = [parseInt(times[0]), parseInt(times[1])]
-    hours += times[0]
-    let minutes = times[1]
+	if (str.includes("TBA")) return '00:00:00'
+    let timestr = str.substr(0, 4)
+    let times = timestr.split(":")
+	let hours = parseInt(times[0])
+    let minutes = parseInt(times[1])
+    if (str.includes("pm")) hours += 12
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`
 }
 
 let str = ""
 
-const get = (p, selector) => { return p.querySelector(selector).textContent.trim() }
+const get = (p, selector) => { return p.querySelector(selector).textContent.trim().replace('\'', '\\\'') }
 
 document.querySelectorAll("#cardContainer div.wrap").forEach((c) => {
 	back1 = c.querySelector("div.card.back")
@@ -25,8 +23,10 @@ document.querySelectorAll("#cardContainer div.wrap").forEach((c) => {
     const endTime = formatTime(times[1])
     const instructor = get(back1, ".instructor")
     const title = get(back1, ".abbrevTitle")
-    const location = get(back1, ".building")
+    const location = get(back1, ".building").split('/').slice(0, 2).join('/')
     const id = get(back2, ".crn").split(" ")[1]
-    str += `INSERT INTO CLASS VALUES (${id}, '${subject}', '${number}', '${section}', '${title}', '2022', 'SPRING', '${instructor}', '${location}', '${startTime}', '${endTime}');\n`
+    const days = get(back1, ".days").split('/').slice(0, 2).join('/')
+    str += `INSERT INTO CLASS VALUES (${id}, '${subject}', '${number}', '${section}', '${title}', '2022', 'SPRING', '${instructor}', '${location}', '${startTime}', '${endTime}', '${days}');\n`
 })
 console.log(str)
+
