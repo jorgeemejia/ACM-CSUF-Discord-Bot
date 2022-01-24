@@ -1,15 +1,18 @@
 from discord import Embed
 from discord.ext.commands import Bot, Cog
 from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_permission
+from discord_slash.model import SlashCommandPermissionType
 from os import path
 from os import environ
 import json
-from helpers import getGuilds, sendError, sendMessage, standardTime
+from helpers import getGuilds, sendError, sendMessage, standardTime, generatePermissions
 import discord
 from datetime import datetime
 import re
 
 guild_ids = getGuilds()
+permissions = generatePermissions()
 
 import logging
 logging.basicConfig(filename='logs/schedules.log',format='[%(levelname)s] %(asctime)s %(message)s', level=logging.DEBUG)
@@ -61,7 +64,7 @@ class Schedules(Cog):
 
     """
 
-    @cog_ext.cog_subcommand(base="schedule", name="view", description="View your schedule", guild_ids=guild_ids)
+    @cog_ext.cog_subcommand(base="schedule", name="view", description="View your schedule", guild_ids=guild_ids, base_default_permission=False, base_permissions=permissions)
     async def _schedule_view(self, ctx: SlashContext, semester: str = getEnrollmentSemester()):
 
         # Validate the semester input
@@ -85,7 +88,7 @@ class Schedules(Cog):
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
 
         for c in result:
-            embed.add_field(name='{} {}-{}'.format(c[0], c[1], c[2]), value='{} - {}'.format(standardTime(c[3]), standardTime(c[4])), inline=False)
+            embed.add_field(name='{} {}-{}'.format(c[0], c[1], c[2]), value='{} - {}'.format(standardTime(str(c[3])), standardTime(str(c[4]))), inline=False)
         await ctx.send(embed=embed)
 
     """
@@ -94,7 +97,7 @@ class Schedules(Cog):
 
     """
 
-    @cog_ext.cog_subcommand(base="schedule", name="add", description="Add a class to your schedule. Must include the section!", guild_ids=guild_ids)
+    @cog_ext.cog_subcommand(base="schedule", name="add", description="Add a class to your schedule. Must include the section!", guild_ids=guild_ids, base_default_permission=False, base_permissions=permissions)
     async def _schedule_add(self, ctx: SlashContext, course: str, semester: str = getEnrollmentSemester()):
 
         # Validate the semester input
@@ -139,13 +142,39 @@ class Schedules(Cog):
         await sendMessage(ctx, "Successfully added".format(course))
 
         # Check if a student is the first one to join a course
-        q = 'SELECT COUNT(*) FROM DISCORDSCHEDULE WHERE classId = %s'
+        q = 'SELECT A.subject, A.number, A.discordChannel FROM COURSECHANNEL AS A, (SELECT subject, number FROM CLASS INNER JOIN DISCORDSCHEDULE ON (DISCORDSCHEDULE.classId = CLASS.id) WHERE classId = %s) AS B WHERE A.subject = B.subject AND A.number = B.number;'
         d = (classId,)
         result = await query(q, d, ctx)
         if result is None: return
 
-        if (result[0][0] <= 1):
-            pass
+        # if this user is the first one to add the class
+        if result == []:
+            guild = ctx.guild
+            member = ctx.author
+            overwrites = {
+                    guild.default_role: discord.PermissionOverwrite(read_messages=False),
+                    member: discord.PermissionOverwrite(read_messages=True),
+                    }
+            cat = discord.utils.get(guild.categories, name="classes")
+            channel_name = f"{subject} {number}"
+            channel = await guild.create_text_channel(channel_name, overwrites=overwrites, category=cat)
+            message = await channel.send("Welcome to the private text channel! Here you can interact with students who are taking the same course!")
+            await message.pin()
+
+            q = 'INSERT INTO COURSECHANNEL (subject, number, discordChannel) VALUES (%s, %s, %s);'
+            d = (subject, number, channel.id)
+            result = await query(q, d, ctx)
+            if result is None: return
+
+            await sendMessage(ctx, f"You can now access <#{channel.id}> Here you can interact with students who are taking the same course! It seems that you are alone in this channel, but don't worry fellow students will arrive when they add the same course to their schedule!", hidden=True)
+        else:
+            discordChannel = result[0][2]
+            overwrites = ctx.channel.overwrites_for(ctx.author)
+            overwrites.send_messages, overwrites.read_messages = True, True
+            await ctx.channel.set_permissions(ctx.author, overwrite=overwrites)
+            await sendMessage(channel, f"You can now access <#{discordChannel}> Here you can interact with students who are taking the same course!", hidden=True)
+
+
 
 
 
@@ -155,7 +184,7 @@ class Schedules(Cog):
 
     """
 
-    @cog_ext.cog_subcommand(base="schedule", name="remove", description="Remove a class from your schedule. Must include the section!", guild_ids=guild_ids)
+    @cog_ext.cog_subcommand(base="schedule", name="remove", description="Remove a class from your schedule. Must include the section!", guild_ids=guild_ids, base_default_permission=False, base_permissions=permissions)
     async def _schedule_remove(self, ctx: SlashContext, course: str, semester: str = getEnrollmentSemester()):
 
         # Validate the semester input
@@ -199,6 +228,41 @@ class Schedules(Cog):
 
         await sendMessage(ctx, "Successfully removed")
 
+        # check the number of students 
+        q = 'SELECT COUNT(*) FROM DISCORDSCHEDULE INNER JOIN CLASS ON (DISCORDSCHEDULE.classId = CLASS.id) WHERE subject = %s AND number = %s;'
+        d = (subject, number)
+        result = await query(q, d, ctx)
+        if result is None: return
+
+        num_students = result[0][0]
+
+        # get the channelId
+        q = 'SELECT discordChannel FROM COURSECHANNEL WHERE subject = %s AND number = %s;'
+        d = (subject, number)
+        result = await query(q, d, ctx)
+        if result is None: return
+
+        channel_id = result[0][0]
+        print(num_students)
+
+        # if there are no more students in the channel, delete the channel
+        if num_students == 0:
+            q = 'DELETE FROM COURSECHANNEL WHERE subject = %s and number = %s;'
+            d = (subject, number)
+            result = await query(q, d, ctx)
+            if result is None: return
+
+            print(channel_id)
+
+            channel = self.bot.get_channel(int(channel_id))
+            await channel.delete()
+
+        # otherwise, remove their permissions
+        else:
+            discordChannel = result[0][1]
+            overwrites = ctx.channel.overwrites_for(ctx.author)
+            overwrites.send_messages, overwrites.read_messages = False, False
+            await ctx.channel.set_permissions(ctx.author, overwrite=overwrites)
 
 
 
