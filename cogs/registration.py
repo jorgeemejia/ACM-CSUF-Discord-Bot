@@ -83,7 +83,7 @@ class Schedules(Cog):
         /register <csuf_email>
 
     """
-    @cog_ext.cog_slash(name="register", description="register using your CSUF email to get access to the server!", guild_ids=guild_ids)
+    @cog_ext.cog_slash(name="register", description="register using your CSUF email to get access to the server!", guild_ids=guild_ids, default_permission=True)
     async def _register(self, ctx: SlashContext, csuf_email: str, first_name: str, last_name: str, pronouns: str, show_pronouns: bool = True):
 
         # Validate the email is a csuf email
@@ -150,7 +150,7 @@ class Schedules(Cog):
      /verify <verification_code>
 
     """
-    @cog_ext.cog_slash(name="verify", description="Verify your email after running the /register command", guild_ids=guild_ids)
+    @cog_ext.cog_slash(name="verify", description="Verify your email after running the /register command", guild_ids=guild_ids, default_permission=True)
     async def _verify(self, ctx: SlashContext, verification_code: str):
 
         # Check for verification codes 5 minutes or less, with the discordId of the current user, and return the email
@@ -159,7 +159,7 @@ class Schedules(Cog):
         result = await query(q, d, ctx)
         if result == False: return
         if (result[0][0] < 1):
-            return await sendError(ctx, "The code you entered was incorrect or has expired")
+            return await sendError(ctx, "The code you entered was incorrect or was more than 5 minutes old and has expired.")
         email = result[0][1]
         firstName = result[0][2]
         lastName = result[0][3]
@@ -185,13 +185,15 @@ class Schedules(Cog):
 
         # Find the verified role and add it to the user
         try:
-            verified_role = utils.get(ctx.guild.roles,name="Verified")
-            await ctx.author.add_roles(verified_role)
+            verified_email_role = utils.get(ctx.guild.roles,name="Verified Email")
+            await ctx.author.add_roles(verified_email_role)
         except Exception as e:
             logging.error(str(e))
             return await sendError(ctx, "Failed to add role")
 
-        await sendMessage(ctx, "Successfully Registered!")
+        roles_channel = environ.get('ROLES_CHANNEL_ID')
+
+        await sendMessage(ctx, f"Successfully verified your email! Last step, go to <#{roles_channel} and select a role to complete your registration.")
 
 
 def setup(bot: Bot):
