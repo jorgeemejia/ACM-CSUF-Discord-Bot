@@ -9,21 +9,12 @@ class Roles(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
-    # @Cog.listener()
-    # async def on_message(self, message):
-    #     if message.content == "Hi":
-    #         await message.channel.send("Hello")
-    
-    # @Cog.listener()
-    # async def on_member_join(self, member):
-    #     role = discord.utils.get(member.guild.roles, id=int(os.environ.get('NEWCOMER'))) #NEWCOMER is the id of the NewComer role in my server
-    #     await member.add_roles(role)
-
 
     @Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        role_message_id = 929188792252903424  # using a random message ID to test
+        role_message_id = int(os.environ.get('GET_ROLE_MESSAGE'))
         if payload.message_id == role_message_id:
+            
             member = payload.member
             dev_role = discord.utils.get(member.guild.roles, name='Dev Member')
             algo_role = discord.utils.get(member.guild.roles, name='Algo Member')
@@ -42,9 +33,8 @@ class Roles(Cog):
 
     @Cog.listener()
     async def on_raw_reaction_remove(self, payload):
-        role_message_id = 929188792252903424
+        role_message_id = int(os.environ.get('GET_ROLE_MESSAGE'))
         if payload.message_id == role_message_id:
-
             guild = await self.bot.fetch_guild(payload.guild_id)
             member = await guild.fetch_member(payload.user_id)
 
@@ -61,9 +51,6 @@ class Roles(Cog):
             else: 
                 return
 
-
-
-    
 
 
 def setup(bot: Bot):
