@@ -191,7 +191,7 @@ class Schedules(Cog):
             logging.error(str(e))
             return await sendError(ctx, "Failed to add role")
 
-        roles_channel = environ.get('ROLES_CHANNEL_ID')
+        roles_channel = environ.get('ROLE_CHANNEL_ID')
 
         await sendMessage(ctx, f"Successfully verified your email! Last step, go to <#{roles_channel}> and select a role to complete your registration.")
 
