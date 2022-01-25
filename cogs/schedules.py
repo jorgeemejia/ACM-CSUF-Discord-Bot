@@ -67,6 +67,11 @@ class Schedules(Cog):
     @cog_ext.cog_subcommand(base="schedule", name="view", description="View your schedule", guild_ids=guild_ids, base_default_permission=False, base_permissions=permissions)
     async def _schedule_view(self, ctx: SlashContext, semester: str = getEnrollmentSemester()):
 
+        guild = ctx.guild
+        channel = discord.utils.get(guild.channels, id=744067849722658827)
+        channel.send("Select one or more of our paths to get notifications about them!\n\n:acmAlgo: acmAlgo - Data Structure and Algorithms, Competitive Programming, Interview Prep\n:acmDev: acmDev - Software Engineering, Projects, Technical Workshops\n:acmCreate: acmCreate - Front End, Design, UI/UX\n🔕 Limited Notifications - Get a maximum of 1 notification every Monday that announces our plans for the week!\n❌ No Notifications at all");
+
+
         # Validate the semester input
         semester = semester.upper()
         if (semester != "FALL" and semester != "SPRING"):
@@ -194,7 +199,7 @@ class Schedules(Cog):
             return await sendError(ctx, "Invalid semester, please choose Fall or Spring.")
 
         # Verify that the course is a valid course.
-        reg = re.search(r".*[A-Za-z]{4}\W*[0-9]{3}[A-Za-z]?\W*-\W*[0-9]{1,2}.*", course)
+        reg = re.search(r".*[A-Za-z]{4}\s*[0-9]{3}[A-Za-z]?\s*-\s*[0-9]{1,2}.*", course)
         if not (reg):
             return await sendError(ctx, "Invalid class. Make sure you follow the correct format. Example: CPSC 131-05")
 
