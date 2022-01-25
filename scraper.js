@@ -1,11 +1,10 @@
 const formatTime = (str) => {
 	if (str.includes("TBA")) return '00:00:00'
-    let timestr = str.substr(0, 4)
-    let times = timestr.split(":")
+    let times = str.substr(0, 5).split(":")
 	let hours = parseInt(times[0])
-    let minutes = parseInt(times[1])
+    let minutes = times[1]
     if (str.includes("pm")) hours += 12
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`
+    return `${String(hours).padStart(2, '0')}:${minutes}:00`
 }
 
 let str = ""
