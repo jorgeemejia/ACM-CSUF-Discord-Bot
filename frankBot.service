@@ -1,0 +1,23 @@
+# Installation
+# move to /lib/systemd/system/
+# systemctl list-unit-files | grep "frankBot"
+# sudo systemctl enable frankBot
+# sudo systemctl start  frankBot
+# sudo systemctl status frankBot
+
+
+
+[Unit]
+Description=The acmCSUF offical discord bot
+After=network.target syslog.target
+
+[Service]
+# see man systemd.service
+WorkingDirectory=/home/ec2-user/discord-bot
+User=ec2-user
+Type=oneshot
+ExecStart=/usr/bin/python3 /home/ec2-user/discord-bot/main.py
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
