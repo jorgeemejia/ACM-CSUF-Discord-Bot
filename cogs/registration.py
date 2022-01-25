@@ -16,6 +16,9 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+SHOW_MESSAGES = False
+SHOW_ERRORS = False
+
 import logging
 logging.basicConfig(filename='logs/registration.log',format='[%(levelname)s] %(asctime)s %(message)s', level=logging.DEBUG)
 
@@ -30,7 +33,7 @@ async def query(q, d, ctx=None):
         print(str(e))
         logging.error(str(e))
         if (ctx):
-            await sendError(ctx, str(e))
+            await sendError(ctx, str(e), hidden=SHOW_ERRORS)
         return False
 
 guild_ids = getGuilds()
@@ -142,7 +145,7 @@ class Schedules(Cog):
             await sendError(ctx, "Unable to send verification email")
 
 
-        await sendMessage(ctx, "A verification code has been sent to your email. Please run the /verify command with the code provided.")
+        await sendMessage(ctx, "A verification code has been sent to your email. Please run the /verify command with the code provided.", hidden=SHOW_MESSAGES)
 
 
     """
@@ -193,7 +196,7 @@ class Schedules(Cog):
 
         roles_channel = environ.get('ROLE_CHANNEL_ID')
 
-        await sendMessage(ctx, f"Successfully verified your email! Last step, go to <#{roles_channel}> and select a role to complete your registration.")
+        await sendMessage(ctx, f"Successfully verified your email! Last step, go to <#{roles_channel}> and select a role to complete your registration.", hidden=SHOW_MESSAGES)
 
 
 def setup(bot: Bot):
