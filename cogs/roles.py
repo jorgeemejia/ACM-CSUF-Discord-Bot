@@ -36,13 +36,13 @@ class Roles(Cog):
                 await member.add_roles(algo_role)
             elif emoji_name == 'acmCreate':
                 await member.add_roles(create_role)
-            elif emoji_name == "x":
+            elif emoji_name == '\u274C':
                 await member.remove_roles(general_role)
 
-            verified_email_role = discord.utils.get(ctx.guild.roles,name="Verified Email")
-            verified_role = discord.utils.get(ctx.guild.roles,name="Verified")
-            member.add_roles(verified_role)
-            member.remove_roles(verified_email_role)
+            verified_email_role = discord.utils.get(member.guild.roles, name="Verified Email")
+            verified_role = discord.utils.get(member.guild.roles, name="Verified")
+            await member.add_roles(verified_role)
+            await member.remove_roles(verified_email_role)
     
 
     @Cog.listener()
@@ -55,7 +55,7 @@ class Roles(Cog):
             dev_role = discord.utils.get(guild.roles, name='Dev Member')
             create_role = discord.utils.get(guild.roles, name='Create Member')
             algo_role = discord.utils.get(guild.roles, name='Algo Member')
-            general_role = discord.utils.get(member.guild.roles, name='Member')
+            general_role = discord.utils.get(guild.roles, name='Member')
 
             if payload.emoji.name == 'acmDev': 
                 await member.remove_roles(dev_role)
@@ -63,7 +63,7 @@ class Roles(Cog):
                 await member.remove_roles(create_role)
             elif payload.emoji.name == 'acmAlgo':
                 await member.remove_roles(algo_role)
-            elif payload.emoji.name == 'x':
+            elif payload.emoji.name == '\u274C':
                 await member.add_roles(general_role)
 
 
