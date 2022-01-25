@@ -107,7 +107,7 @@ class Schedules(Cog):
             return await sendError(ctx, "Invalid semester, please choose Fall or Spring.")
         
         # Verify that the course is a valid course.
-        reg = re.search(r".*[A-Za-z]{4}\W*[0-9]{3}[A-Za-z]?\W*-\W*[0-9]{1,2}.*", course)
+        reg = re.search(r".*[A-Za-z]{4}\s*[0-9]{3}[A-Za-z]?\s*-\s*[0-9]{1,2}.*", course)
         if not (reg):
             return await sendError(ctx, "Invalid class. Make sure you follow the correct format. Example: CPSC 131-05")
 
