@@ -18,13 +18,13 @@ def isCsufEmail(email):
 from discord import Embed
 from datetime import datetime
 
-async def sendError(ctx, message, hidden=False):
+async def sendError(ctx, message, hidden=True):
     embed=Embed(title="ERROR", description=message, color=0xff0000)
     embed.add_field(name="Help", value="If needed, use <#{}> to get assistance".format(environ.get('HELP_CHANNEL_ID')), inline=False)
     embed.set_footer(text=str(datetime.now()))
     await ctx.send(embed=embed, hidden=hidden)
 
-async def sendMessage(ctx, message, hidden=False, pinned=False, channel=None):
+async def sendMessage(ctx, message, hidden=True, pinned=False, channel=None):
     embed=Embed(description=message, color=0x00ff00)
     message = await ctx.send(embed=embed, hidden=hidden)
     if (pinned and not hidden):

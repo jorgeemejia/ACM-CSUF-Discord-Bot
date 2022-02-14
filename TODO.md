@@ -3,4 +3,7 @@
 * change names and pronouns
 * get someone to actually review my code
 * caching
+* fix database disconnecting
+
+
 
