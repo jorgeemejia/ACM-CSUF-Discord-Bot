@@ -54,8 +54,8 @@ db = mysql.connector.connect(**mysqlOptions)
 cursor = db.cursor()
 
 def send_email(email, code):
-    usr = os.getenv('SENDER_EMAIL')
-    pwd = os.getenv('SENDER_PASSWORD')
+    usr = environ.get('SENDER_EMAIL')
+    pwd = environ.get('SENDER_PASSWORD')
     session = smtplib.SMTP('smtp.gmail.com', 587) 
     session.starttls() 
     session.login(usr, pwd) 
@@ -64,9 +64,8 @@ def send_email(email, code):
     message['to'] = email
     message['from'] = environ.get('SENDER_EMAIL')
     message['subject'] = "acmCSUF discord verification"
-    body = {'raw': base64.urlsafe_b64encode(message.as_string().encode()).decode()}
 
-    session.sendmail(usr, email, message)
+    session.sendmail(usr, email, message.as_string())
     session.quit()
 
 class Schedules(Cog):
@@ -121,9 +120,10 @@ class Schedules(Cog):
         d = (ctx.author.id, csuf_email, first_name, last_name, pronouns, code)
         result = await query(q, d, ctx)
         if result == False: return
-        
+
         try:
             send_email(csuf_email, code)
+
         except Exception as e:
             logging.error(str(e))
             await sendError(ctx, "Unable to send verification email")
