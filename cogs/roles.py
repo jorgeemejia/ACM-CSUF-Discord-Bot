@@ -14,7 +14,7 @@ class Roles(Cog):
         self.bot = bot
 
     @Cog.listener()
-    async def on_member_join(member):
+    async def on_member_join(self, member):
         member_role = discord.utils.get(member.guild.roles, name='Member')
         await member.add_roles(member_role)
 

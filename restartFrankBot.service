@@ -1,0 +1,7 @@
+# /etc/systemd/system/restartFrankBot.service
+[Unit]
+Description=restart frankBot
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl restart frankBot

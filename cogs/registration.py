@@ -7,12 +7,21 @@ from dotenv import load_dotenv
 load_dotenv()
 from helpers import getGuilds, isCsufEmail, sendError, sendMessage
 from random import randint
+
 import smtplib
 from email.mime.text import MIMEText
 import base64
 
 SHOW_MESSAGES = False
 SHOW_ERRORS = False
+
+from datetime import datetime
+from email.mime.text import MIMEText
+import base64
+
+HIDE_MESSAGES = True
+HIDE_ERRORS = True
+
 
 import logging
 logging.basicConfig(filename='logs/registration.log',format='[%(levelname)s] %(asctime)s %(message)s', level=logging.DEBUG)
@@ -28,7 +37,7 @@ async def query(q, d, ctx=None):
         print(str(e))
         logging.error(str(e))
         if (ctx):
-            await sendError(ctx, str(e), hidden=SHOW_ERRORS)
+            await sendError(ctx, str(e), hidden=HIDE_ERRORS)
         return False
 
 guild_ids = getGuilds()
@@ -50,8 +59,6 @@ def send_email(email, code):
     session = smtplib.SMTP('smtp.gmail.com', 587) 
     session.starttls() 
     session.login(usr, pwd) 
-
-    raise Exception("test")
 
     message = MIMEText("Verification code: <h1>{}</h1> Use <code>/verify</code> in the discord server to complete your registration.<br> If you did not authorize this email, please ignore.".format(code), 'html', 'UTF-8')
     message['to'] = email
@@ -122,7 +129,7 @@ class Schedules(Cog):
             await sendError(ctx, "Unable to send verification email")
 
 
-        await sendMessage(ctx, "A verification code has been sent to your email. Please run the /verify command with the code provided.", hidden=SHOW_MESSAGES)
+        await sendMessage(ctx, "A verification code has been sent to your email. Please run the /verify command with the code provided.", hidden=HIDE_MESSAGES)
 
 
     """
@@ -134,16 +141,16 @@ class Schedules(Cog):
     async def _verify(self, ctx: SlashContext, verification_code: str):
 
         # Check for verification codes 5 minutes or less, with the discordId of the current user, and return the email
-        q = 'SELECT COUNT(*), email, firstName, lastName, pronouns FROM VERIFICATION WHERE createdAt >= CURRENT_TIMESTAMP - INTERVAL 5 MINUTE AND discordId = %s AND code = %s;'
+        q = 'SELECT email, firstName, lastName, pronouns FROM VERIFICATION WHERE createdAt >= CURRENT_TIMESTAMP - INTERVAL 5 MINUTE AND discordId = %s AND code = %s;'
         d = (ctx.author.id, verification_code)
         result = await query(q, d, ctx)
         if result == False: return
-        if (result[0][0] < 1):
+        if (result == []):
             return await sendError(ctx, "The code you entered was incorrect or was more than 5 minutes old and has expired.")
-        email = result[0][1]
-        firstName = result[0][2]
-        lastName = result[0][3]
-        pronouns = result[0][4]
+        email = result[0][0]
+        firstName = result[0][1]
+        lastName = result[0][2]
+        pronouns = result[0][3]
 
         # Insert a new row into the database 
         q = 'INSERT INTO MEMBER (email, discordId, firstName, lastName, pronouns) VALUES (%s, %s, %s, %s, %s)'
@@ -173,7 +180,7 @@ class Schedules(Cog):
 
         roles_channel = environ.get('ROLE_CHANNEL_ID')
 
-        await sendMessage(ctx, f"Successfully verified your email! Last step, go to <#{roles_channel}> and select a role to complete your registration.", hidden=SHOW_MESSAGES)
+        await sendMessage(ctx, f"Successfully verified your email! Last step, go to <#{roles_channel}> and select a role to complete your registration.", hidden=HIDE_MESSAGES)
 
 
 def setup(bot: Bot):

@@ -5,8 +5,6 @@
 # sudo systemctl start  frankBot
 # sudo systemctl status frankBot
 
-
-
 [Unit]
 Description=The acmCSUF offical discord bot
 After=network.target syslog.target
@@ -15,9 +13,9 @@ After=network.target syslog.target
 # see man systemd.service
 WorkingDirectory=/home/ec2-user/discord-bot
 User=ec2-user
-Type=oneshot
+Type=simple
 ExecStart=/usr/bin/python3 /home/ec2-user/discord-bot/main.py
-RemainAfterExit=true
+#RemainAfterExit=true
 
 [Install]
 WantedBy=multi-user.target

@@ -109,6 +109,9 @@ celerybeat.pid
 
 # Environments
 .env
+.env*
+.env.test
+.token*
 .venv
 env/
 venv/
