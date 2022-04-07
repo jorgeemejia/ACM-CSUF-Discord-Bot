@@ -7,14 +7,9 @@ from dotenv import load_dotenv
 load_dotenv()
 from helpers import getGuilds, isCsufEmail, sendError, sendMessage
 from random import randint
+import smtplib
 from email.mime.text import MIMEText
 import base64
-
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
 SHOW_MESSAGES = False
 SHOW_ERRORS = False
@@ -49,37 +44,27 @@ mysqlOptions = {
 db = mysql.connector.connect(**mysqlOptions)
 cursor = db.cursor()
 
-def authenticate_gmail():
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    creds = None
-    SCOPES = ['https://mail.google.com/']
-    if path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', SCOPES)
-            creds = flow.run_local_server(port=8888)
-        # Save the credentials for the next run
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
+def send_email(email, code):
+    usr = os.getenv('SENDER_EMAIL')
+    pwd = os.getenv('SENDER_PASSWORD')
+    session = smtplib.SMTP('smtp.gmail.com', 587) 
+    session.starttls() 
+    session.login(usr, pwd) 
 
-    try:
-        # Return the gmail service
-        return build('gmail', 'v1', credentials=creds)
-    except HttpError as error:
-        print(f'Cannot connect to gmail API: {error}')
+    raise Exception("test")
 
+    message = MIMEText("Verification code: <h1>{}</h1> Use <code>/verify</code> in the discord server to complete your registration.<br> If you did not authorize this email, please ignore.".format(code), 'html', 'UTF-8')
+    message['to'] = email
+    message['from'] = environ.get('SENDER_EMAIL')
+    message['subject'] = "acmCSUF discord verification"
+    body = {'raw': base64.urlsafe_b64encode(message.as_string().encode()).decode()}
+
+    session.sendmail(usr, email, message)
+    session.quit()
 
 class Schedules(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
-        self.gmailService = authenticate_gmail()
 
     """
 
@@ -130,16 +115,8 @@ class Schedules(Cog):
         result = await query(q, d, ctx)
         if result == False: return
         
-        # create the email message
-        message = MIMEText("Verification code: <h1>{}</h1> Use <code>/verify</code> in the discord server to complete your registration.<br> If you did not authorize this email, please ignore.".format(code), 'html', 'UTF-8')
-        message['to'] = csuf_email
-        message['from'] = environ.get('SENDER_EMAIL')
-        message['subject'] = "acmCSUF discord verification"
-        body = {'raw': base64.urlsafe_b64encode(message.as_string().encode()).decode()}
-
-        # send the email
         try:
-            message = (self.gmailService.users().messages().send(userId=environ.get('SENDER_EMAIL'), body=body).execute())
+            send_email(csuf_email, code)
         except Exception as e:
             logging.error(str(e))
             await sendError(ctx, "Unable to send verification email")
