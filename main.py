@@ -18,6 +18,7 @@ async def on_ready():  #event is called using the on_ready function
   """Outputs a statement to the terminal that the bot has logged on successfully"""
   print('logged in as {0.user}'.format(bot)) #outputs a statement to the terminal
 
+
   # old code used to create the get roles channel message
   """
   channel = bot.get_channel(744067849722658827)
