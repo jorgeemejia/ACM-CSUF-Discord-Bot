@@ -1,7 +1,7 @@
 # /etc/systemd/system/restartFrankBot.timer
 [Timer]
-OnActiveSec=5min
-OnUnitActiveSec=5min
+OnActiveSec=1h
+OnUnitActiveSec=1h
 
 [Install]
 WantedBy=timer.target
