@@ -79,6 +79,7 @@ class Schedules(Cog):
     """
     @cog_ext.cog_slash(name="register", description="register using your CSUF email to get access to the server!", guild_ids=guild_ids, default_permission=True)
     async def _register(self, ctx: SlashContext, csuf_email: str, first_name: str, last_name: str, pronouns: str, show_pronouns: bool = True):
+        csuf_email = csuf_email.lower()
 
         # Validate the email is a csuf email
         if not isCsufEmail(csuf_email):
